@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "8c452f85-8d58-43fb-a70b-18e50a3ffa5c",
+		"name": "Работа с корзиной товаров",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "34859652"
+	},
+	"item": [
+		{
+			"name": "1.Добавление определенного параметром товара в корзину",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//проверка статуса ответа\r",
+							"pm.test(\"Status code is  200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Наличие не пустого ответа\", function () {\r",
+							"    pm.expect(pm.response.text()).not.null\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const jar = pm.cookies.jar();\r",
+							"jar.set(\"sibdar-spb.ru\", { name:\"PHPSESSID\", value:\"Gi0ttAC2D3sM8udT8TVPd2CmTa0sk6gU\",  httpOnly : true }, (error, cookie) => {\r",
+							"  if (error) {\r",
+							"    console.error(`An error occurred: ${error}`);\r",
+							"  } else {\r",
+							"    console.log(`Cookie saved: ${cookie}`);\r",
+							"  }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableCookies": true,
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Set-Cookie",
+						"value": "PHPSESSID=s6vEE2UEfZq1t4glabGu1myRX0hJWrAX; domain=sibdar-spb.ru; HttpOnly",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idCookie\": \"733053\",\r\n    \"idProd\": \"178\",\r\n    \"type\": \"add\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/basketOrder.php"
+			},
+			"response": []
+		},
+		{
+			"name": "2.Получение списка товаров в корзине",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус выполнения\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"В корзине есть добавленный товар\", function () {\r",
+							"    var str=\"price_product_item_\" + pm.collectionVariables.get(\"product\") \r",
+							"    pm.expect(pm.response.text()).to.include(str)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xhtml+xml",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "basketor={{basketor}}; PHPSESSID={{PHPSESSID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "{{URL}}/basketList.php"
+			},
+			"response": []
+		},
+		{
+			"name": "3.Увеличение кол-ва определенного товара в корзине",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "data",
+							"value": "{  \"idCookie\": \"733053\", \"idProd\": 178, \"type\": \"plus\"}",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{URL}}/basketOrder.php"
+			},
+			"response": []
+		},
+		{
+			"name": "4.Уменьшение кол-ва определенного товара в корзине",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус выполнения\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "basketor={{basketor}}; PHPSESSID={{PHPSESSID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "data",
+							"value": "{  \"idCookie\": \"{{basketor}}\", \"idProd\": {{product}}, \"type\": \"minus\"}",
+							"type": "text"
+						}
+					]
+				},
+				"url": "{{URL}}/ajax/basketOrder.php"
+			},
+			"response": []
+		},
+		{
+			"name": "5.Удаление определенного товара из корзины",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "basketor=733053; PHPSESSID=qBXmX0htc5w4egOR3WikSk6HPkyJOs16",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idCookie\": \"733053\",\r\n    \"idProd\": 178,\r\n    \"type\": \"delete\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/basketOrder.php"
+			},
+			"response": []
+		},
+		{
+			"name": "6.В корзине отсутствует  удаленный продукт",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Статус выполнения\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"В корзине есть добавленный товар\", function () {\r",
+							"    var str=\"price_product_item_\" + pm.collectionVariables.get(\"product\") \r",
+							"    pm.expect(pm.response.text()).to.include(str)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xhtml+xml",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "basketor={{basketor}}; PHPSESSID={{PHPSESSID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "{{URL}}/basketList.php"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "inherit",
+		"inherit": {}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "https://www.sibdar-spb.ru/ajax",
+			"type": "string"
+		},
+		{
+			"key": "basketor",
+			"value": "733053",
+			"type": "string"
+		},
+		{
+			"key": "PHPSESSID",
+			"value": "qBXmX0htc5w4egOR3WikSk6HPkyJOs16",
+			"type": "string"
+		},
+		{
+			"key": "product",
+			"value": "178",
+			"type": "string"
+		},
+		{
+			"key": "startCount",
+			"value": ""
+		}
+	]
+}
