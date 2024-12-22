@@ -11,7 +11,7 @@ base_url ='https://www.sibdar-spb.ru'
 idCookie = f'"idCookie" : "{param.basketor}"'
 
 data = 'data: {'+ idCookie +',"idProd":"178","type":"add"}'
-data_del = 'data: {'+ idCookie +',"idProd":204,"type":"delete"}'
+data_del = 'data: {'+ idCookie +',"idProd":178,"type":"delete"}'
 
 cookie = {"Cookie" : f'basketor={param.basketor}; PHPSESSID={param.PHPSESSID}'}
 
