@@ -13,7 +13,7 @@ idCookie = f'"idCookie" : "{param.basketor}"'
 data = 'data: {'+ idCookie +',"idProd":"178","type":"add"}'
 data_del = 'data: {'+ idCookie +',"idProd":204,"type":"delete"}'
 
-cookie = {"Cookie" : f'basketor={param.basketor}; PHPSESSID=s6vEE2UEfZq1t4glabGu1myRX0hJWrAX'}
+cookie = {"Cookie" : f'basketor={param.basketor}; PHPSESSID={param.PHPSESSID}'}
 
 
 def test_add_product_to_basket():
